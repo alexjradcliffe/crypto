@@ -32,10 +32,20 @@ class ciphertextTest(unittest.TestCase):
     def test8(self):
 	self.assertEqual(ciphertext("Hello!").ioc(), 0.1)
 
-'''
+
     def test9(self):
 	self.assertEqual(ciphertext("Helllo!").sortednfreq(2), [('LL', 0.4), ('EL', 0.2), ('HE', 0.2), ('LO', 0.2)])
-'''
+
+    def test10(self):
+        with open('english_quadgrams.txt') as f:
+            lines = f.read().splitlines()
+
+        stdQuadOcc = {}
+        for line in lines:
+            stdQuadOcc[line.split()[0]] = int(line.split()[1])
+	self.assertEqual(ciphertext("Hello!").fitness(stdQuadOcc), -8.393753565159919)
+
+
 
 if __name__ == '__main__':
     unittest.main()
