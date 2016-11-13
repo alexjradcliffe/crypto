@@ -11,7 +11,11 @@ if len(sys.argv) >= 2:
 else:
     msg = input("Enter message: ") if python3 else raw_input("Enter message: ")
 
-
+with open('english_quadgrams.txt') as f:
+    lines = f.read().splitlines()
+stdQuadOcc = {}
+for line in lines:
+    stdQuadOcc[line.split()[0]] = int(line.split()[1])
 
 class ciphertext:
     'Class for ciphertext'
@@ -515,7 +519,7 @@ class ciphertext:
               stf[8][0], trifreq[stf[8][0]],
               stf[9][0], trifreq[stf[9][0]])
             )
-    def fitness(self, stdQuadOcc):
+    def fitness(self):
         total = 0
         for count in stdQuadOcc.values():
             total += count
@@ -541,8 +545,8 @@ class ciphertext:
             dec += chr(keystr.index(l) + 65)
         return(ciphertext(dec))
 
-    def optimalKey(self, stdQuadOcc):
-        def randSwitch(keystr):
+    def optimalKey(self):
+        def randSwitch(keystr, msg):
             a = random.randint(0, 25)
             b = random.randint(0, 25)
             while a == b:
@@ -551,37 +555,41 @@ class ciphertext:
                 a, b = b, a
             keystr = (keystr[:a] + keystr[b] + keystr[a + 1:b]
                       + keystr[a] + keystr[b + 1:])
-            return keystr
+            a, b = keystr.index(chr(b + 65)), keystr.index(chr(a + 65))
+            newmsg = ""
+            for i in str(msg):
+		if i == a:
+                    i = b
+                elif i == b:
+                    i = a
+                newmsg += i
+            return [keystr, ciphertext(newmsg)]
 
+        msg = self
         keystr = "YBXONGSWKCPZFMTDHRQUJVELIA" #Should probably randomize
                                               #at some point
-        maxfit = self.subDecode(keystr).fitness(stdQuadOcc)
+        maxfit = self.subDecode(keystr).fitness()
         iterations = 0
         while iterations < 1000:
-            newkey = randSwitch(keystr)
-            fit = self.subDecode(newkey).fitness(stdQuadOcc)
+            tmp = randSwitch(keystr, msg)
+            newkey, msg = tmp[0], tmp[1]
+            fit = msg.fitness()
             if fit > maxfit:
                 keystr = newkey
                 maxfit = fit
                 iterations = 0
+                print("0")
             else:
                 iterations += 1
+                print("1")
         return [keystr, maxfit]
     
     def subOptimize(self):
-        with open('english_quadgrams.txt') as f:
-            lines = f.read().splitlines()
-        
-        stdQuadOcc = {}
-        for line in lines:
-            stdQuadOcc[line.split()[0]] = int(line.split()[1])
-        
-        k = self.optimalKey(stdQuadOcc)
+        k = self.optimalKey()
         print(k)
         print(str(self.subDecode(k[0])).lower())
 
 
-
-print(ciphertext("""DATJP MZVGG TRVIO OJBZO DIOCZ HDYYG ZJAOC DNTJP RDGGC VQZOJ KVTDF IJRTJ PRDGG WZCPI ODIBH ZVIYD XVIAJ MBDQZ OCZVM MJBVI XZWPO DRDGG IJOAJ MBDQZ TJPMD BIJMV IXZWZ AJMZT JPXVI GZVMI HJMZV WJPOO CZMVO GDIZN AMJHH ZTJPR DGGCV QZOJV NFTJP MXJGG ZVBPZ NDIAM ZIXCV IYWMD ODNCD IOZGG DBZIX ZRCVO OCZTV GMZVY TFIJR KJRZM APGAJ MXZNV MZRJM FDIBO JFZZK OCZMV OGDIZ NMPII DIBVI YRZWJ OCIZZ YOJFI JRRCJ JPMZI ZHDZN VMZWZ AJMZR ZXVIH ZZOTJ PNCJP GYPIY ZMNOV IYOCV ORDOC JPOHZ TJPMD IQZNO DBVOD JINRD GGBVD IGDOO GZIZB JODVO DJINR DOCHZ HVTBV DIZQZ MTOCD IB""").subOptimize())
+print(ciphertext("""DATJP MZVGG TRVIO OJBZO DIOCZ HDYYG ZJAOC DNTJP RDGGC VQZOJ KVTDF IJRTJ PRDGG WZCPI ODIBH ZVIYD XVIAJ MBDQZ OCZVM MJBVI XZWPO DRDGG IJOAJ MBDQZ TJPMD BIJMV IXZWZ AJMZT JPXVI GZVMI HJMZV WJPOO CZMVO GDIZN AMJHH ZTJPR DGGCV QZOJV NFTJP MXJGG ZVBPZ NDIAM ZIXCV IYWMD ODNCD IOZGG DBZIX ZRCVO OCZTV GMZVY TFIJR KJRZM APGAJ MXZNV MZRJM FDIBO JFZZK OCZMV OGDIZ NMPII DIBVI YRZWJ OCIZZ YOJFI JRRCJ JPMZI ZHDZN VMZWZ AJMZR ZXVIH ZZOTJ PNCJP GYPIY ZMNOV IYOCV ORDOC JPOHZ TJPMD IQZNO DBVOD JINRD GGBVD IGDOO GZIZB JODVO DJINR DOCHZ HVTBV DIZQZ MTOCD IB""").optimalKey())
 
 
