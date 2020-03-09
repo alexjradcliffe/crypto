@@ -22,6 +22,9 @@ msg = newMsg
 
     
 def occurences(string):
+    """
+        Returns the number of occurences of each character in each string in a dict.
+    """
     occ = {chr(i) : 0 for i in range(65, 91)}
     for i in string:
         if i in occ:
@@ -30,6 +33,9 @@ def occurences(string):
 
 
 def ioc(string):
+    """
+        Returns the index of coincidence of a string
+    """
     N = len(string)
     total = 0
     occ = occurences(string)
@@ -39,6 +45,9 @@ def ioc(string):
 
 
 def avgioc(string, n):
+    """
+        Splits the string into n columns, and returns the average ioc of each column
+    """
     columns = ["" for i in range(n)]
     for i in range(len(string)):
         columns[i % n] += string[i]
@@ -52,3 +61,4 @@ print("\nThe column IOC's are:\n")
 
 for i in range(12):
     print(i + 1, avgioc(msg, i + 1) * 26)
+    # This should tell you what the likely length of the keystring is
