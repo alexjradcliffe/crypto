@@ -3,8 +3,12 @@ from __future__ import division
 import operator
 import sys
 
-
+"""
+    Will print nice analysis of some ciphertext.
+    Will also output it into an html file (results.htm)
+"""
 python3 = True if sys.version_info.major > 2 else False
+# It's python2 & python3 compatible
 if len(sys.argv) >= 2:
     msg = sys.argv[1]
 else:
@@ -20,6 +24,9 @@ msg = newMsg
 
     
 def occurences(string):
+    """
+        Returns a dict with the occurences of each character in the string
+    """
     occ = {chr(i) : 0 for i in range(65, 91)}
     for i in string:
         if i in occ:
@@ -27,6 +34,9 @@ def occurences(string):
     return occ
 
 def nocc(string, n):
+    """
+        Returns a dict with the occurences of each ngram in the string
+    """
     occ = {}
     for i in range(len(string) + 1 - n):
         if string[i : i + n] in occ:
@@ -36,6 +46,9 @@ def nocc(string, n):
     return occ
 
 def frequency(string):
+    """
+        Returns a dict with the frequencies of each character in the string
+    """
     N = len(string)
     occ = occurences(string)
     freq = {chr(i) : 0 for i in range(65, 91)}
@@ -45,6 +58,9 @@ def frequency(string):
         
 
 def nfreq(string, n):
+    """
+        Returns a dict with the frequencies of each ngram in the string
+    """
     N = len(string) + 1 - n
     occ = nocc(string, n)
     freq = {}
@@ -53,17 +69,26 @@ def nfreq(string, n):
     return(freq)
                 
 def sortedfreq(string):
+    """
+        Returns an ordered dict with the ordered frequencies of each character in the string
+    """
     freq = frequency(string)
     sortedf = sorted(freq.items(), key=operator.itemgetter(1), reverse=1)
     return sortedf
 
 def sortednfreq(string, n):
+    """
+        Returns an ordered dict with the ordered frequencies of each ngram in the string
+    """
     freq = nfreq(string, n)
     sortedf = sorted(freq.items(), key=operator.itemgetter(1), reverse=1)
     return sortedf
 
 
 def ioc(string):
+    """
+        Returns the index of coincidence of the string
+    """
     N = len(string)
     total = 0
     occ = occurences(string)
@@ -85,7 +110,7 @@ freq = frequency(msg)
 bifreq = nfreq(msg, 2)
 trifreq = nfreq(msg, 3)
 
-
+# writes the results into a nice HTML file, results.htm
 with open('results.htm', 'w') as f:
     f.write("""
 <!DOCTYPE html>
