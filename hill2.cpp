@@ -6,10 +6,15 @@
 #include <ctime>
 #include <vector>
 
+/*
+    This code should be used to decrypt Hill Ciphers with the crib as a 2x2 matrix.
+    To do so you will first need to run analyse.py to get some possible ciphertext plaintext pairs.
+*/
+
 std::map<std::string, int> stdQuadOcc;
 
-
 void quads(std::map<std::string, int> &stdQuadOcc){
+    // populates stdQuadOcc with the no. of occurrences of each quadgram
     std::ifstream file("english_quadgrams.txt");
     std::string str;
     int a;
@@ -22,6 +27,7 @@ void quads(std::map<std::string, int> &stdQuadOcc){
 }
 
 int modInv(int x, int mod){
+    // returns the inverse of x modulo mod
     x %= 26;
     switch(x){
         case 1: return 1;
@@ -41,6 +47,7 @@ int modInv(int x, int mod){
 }
 
 std::vector<std::vector <int> > modInv(std::vector <std::vector <int> > encKey){
+    // inverts the matrix encKey modulo 26
     int det = encKey[0][0] * encKey[1][1] - encKey[0][1] * encKey[1][0];
     int invDet = modInv(det, 26);
     if (invDet == 0){
@@ -75,6 +82,7 @@ std::vector<std::vector <int> > modInv(std::vector <std::vector <int> > encKey){
 }
 
 std::string decode(std::string msg, std::vector<std::vector <int> >  decKey){
+    // decodes the matrix given a certain decryption key
     std::string newmsg = "";
     int l = msg.length();
     for (int i = 0; i < l - 1; i += 2){
@@ -97,10 +105,8 @@ std::string decode(std::string msg, std::vector<std::vector <int> >  decKey){
 }
 
 float score(std::string quad){
-    if (stdQuadOcc.count("HING") != 1){
-        quads(stdQuadOcc);
-    }
-    if (stdQuadOcc.count(quad) == 1){
+    // returns the score of a quadgram
+    if (stdQuadOcc.count(quad) > 1){
         return std::log(stdQuadOcc[quad]);
     } else {
         return std::log(0.01);
@@ -108,6 +114,7 @@ float score(std::string quad){
 }
 
 float fitness(std::string msg){
+    // returns a fitness showing how similar a decrypted message is to English
     float fitness = 0;
     int l = msg.length();
     for (int i = 0; i < l - 3; i++){
@@ -118,6 +125,7 @@ float fitness(std::string msg){
 
 std::vector<std::vector <int> > cribToKey(std::vector<std::vector <int> > ciphertext, std::vector<std::vector <int> > plaintext, bool repeat = false){
     std::vector<std::vector <int> > invCiphertext = modInv(ciphertext);
+    // will take a section of plain ciphertext and plaintext and give you a key
     if (invCiphertext[0][0] == 0 && invCiphertext[0][1] == 0 && invCiphertext[1][0] == 0 && invCiphertext[1][1] == 0 && repeat == false){
         return modInv(cribToKey(plaintext, ciphertext, true));
     }
@@ -133,6 +141,7 @@ std::vector<std::vector <int> > cribToKey(std::vector<std::vector <int> > cipher
 
 
 void optimize(std::string msg, std::string crib){
+    // will take a crib, and will print out the decryption it gives you along with it's fitness and key.
     std::vector<std::vector<int> > bestKey;
     bestKey.push_back(std::vector <int>());
     bestKey.push_back(std::vector <int>());
@@ -162,56 +171,12 @@ void optimize(std::string msg, std::string crib){
         newKey = cribToKey(cText, vCrib);
 	decMsg = decode(msg, newKey);
 	float newFit = fitness(decMsg);
-/*	if (newFit > maxFit){
-	    bestKey = newKey;
-	    maxFit = newFit;
-	    std::cout << maxFit << std::endl;
-	    std::cout << bestKey[0][0] << " " << bestKey[0][1] << std::endl;
-	    std::cout << bestKey[1][0] << " " << bestKey[1][1] << std::endl;
-            std::cout << decMsg << std::endl;
-            std::cout << std::endl;
-	}  */
-        bestKey = newKey;
+    bestKey = newKey;
 	maxFit = newFit;
 	std::cout << i << std::endl;
 	std::cout << maxFit << std::endl;
-        std::cout << bestKey[0][0] << " " << bestKey[0][1] << std::endl;	        std::cout << bestKey[1][0] << " " << bestKey[1][1] << std::endl;
-        std::cout << decMsg << std::endl;
-        std::cout << std::endl;
-    }
-    for (int i = 2; i < l - 3; i += 2){
-        std::vector<std::vector<int> > vCrib;
-        vCrib.push_back(std::vector<int>());
-        vCrib.push_back(std::vector<int>());
-        vCrib[0].push_back(crib[1] - 65);
-        vCrib[0].push_back(crib[2] - 65);
-        vCrib[1].push_back(crib[3] - 65);
-        vCrib[1].push_back(crib[4] - 65);
-        std::vector<std::vector<int> > cText;
-        cText.push_back(std::vector<int>());
-        cText.push_back(std::vector<int>());
-        cText[0].push_back(msg[i] - 65);
-        cText[0].push_back(msg[i + 1] - 65);
-        cText[1].push_back(msg[i + 2] - 65);
-        cText[1].push_back(msg[i + 3] - 65);
-        newKey = cribToKey(cText, vCrib);
-        decMsg = decode(msg, newKey);
-        float newFit = fitness(decMsg);
-/*        if (newFit > maxFit){
-	    bestKey = newKey;
-	    maxFit = newFit;
-	    std::cout << maxFit << std::endl;
-	    std::cout << bestKey[0][0] << " " << bestKey[0][1] << std::endl;
-	    std::cout << bestKey[1][0] << " " << bestKey[1][1] << std::endl;
-            std::cout << decMsg << std::endl;
-            std::cout << std::endl;
-	}  */
-        bestKey = newKey;
-	maxFit = newFit;
-	std::cout << i - 1 << std::endl;
-	std::cout << maxFit << std::endl;
-	std::cout << bestKey[0][0] << " " << bestKey[0][1] << std::endl;
-	std::cout << bestKey[1][0] << " " << bestKey[1][1] << std::endl;
+        std::cout << bestKey[0][0] << " " << bestKey[0][1] << std::endl;
+        std::cout << bestKey[1][0] << " " << bestKey[1][1] << std::endl;
         std::cout << decMsg << std::endl;
         std::cout << std::endl;
     }
@@ -219,6 +184,7 @@ void optimize(std::string msg, std::string crib){
 
 
 int main(){
+    // use analyse.py to find some likely ciphertext plaintext pairs, and then put code here to test the results.
     std::vector<std::vector <int> > cText;
     cText.push_back(std::vector <int>());
     cText.push_back(std::vector <int>());
