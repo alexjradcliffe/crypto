@@ -105,8 +105,10 @@ std::string decode(std::string msg, std::vector<std::vector <int> >  decKey){
 }
 
 float score(std::string quad){
-    // returns the score of a quadgram
-    if (stdQuadOcc.count(quad) > 1){
+    if (stdQuadOcc.count("HING") != 1){
+        quads(stdQuadOcc);
+    } // checks that stdQuadOcc has been populated
+    if (stdQuadOcc.count(quad) == 1){
         return std::log(stdQuadOcc[quad]);
     } else {
         return std::log(0.01);
