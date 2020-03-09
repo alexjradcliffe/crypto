@@ -5,16 +5,13 @@ import sys
 import math
 import random
 
+# Uses a greedy random search algorithm to solve any substitution cipher
 
 python3 = True if sys.version_info.major > 2 else False
 if len(sys.argv) >= 2:
     msg = sys.argv[1]
 else:
     msg = input("Enter message: ") if python3 else raw_input("Enter message: ")
-msg = """
-SCFFP TJTGS CFRJZ XCVLG LYGLZ IJSLW CJLGJ XLGGC ELIFZ XXCFJ TYNSC JTGJS LJLXB HCYVT GTJCY LJNZF VZIBC FJJTX LGBTL GUCXL WTCTX BWTLR JSCJT JNCGS LFAZR TYEGV TWWGJ SCJRP YCXTO NLFLT YJLFL GJLRT YGZTH LECYJ ZNZYR LFTIU CXLWT CNCGN ZFVTY EZYCF LAFKT JXLYJ JZZWK GTYEG ZATCW XLRTC HKJJS CJGZK YRGCH TJZWR GASZZ WAZKW RGSLC YRXCF JTYSC MLHLL YRLML WZBTY ECGAF LLYTY ECWEZ FTJSX IZFCE LYJGJ FPTYE JZBTA VZKJJ SLXZG JFLWT CHWLZ YLGHP RCJCX TYTYE SZNNZ KWRJS CJSCM LITJJ LRNTJ SSLFF LCWLO BLFJT GLTYG TEYCW YZTGL CYCWP GTGGK FLWPJ SLRCJ CTGYJ JSCJY ZTGPT RTRSC MLGZX LWKAV NTJSH CAVEF ZKYRZ YJSLB RGGPY RTACJ LJSLP NLFLT YTJTC WWPGL JKBJZ RLCWN TJSCI KJKFL TYNST ASDKC YJKXJ FCYGX TGGTZ YXCVL GTJTX BZGGT HWLJZ AFCAV ATBSL FGKGT YERTE TJCWX LJSZR GBRGG JCYRG IZFBZ GJRTE TJCWG KFMLT WWCYA LCYRJ SLPNL FLCYC FXGWL YEJSA CHTYL JZIIT ALTYT JTCJT MLVLB JAZXB WLJLW PGLBC FCJLI FZXJS LZJSL FTYJL WWTEL YALCE LYATL GTJST YVJSL BWCYN CGJZJ CWRLY TCHTW TJPZY CWWGT RLGCY RTJNC GGJFK AJKFL RJZBF LMLYJ TYJLF CELYA PFTMC WFPJS LGPYR TACJL SCRBF TXLXT YTGJL FTCWG TEYZI IHKJC IJLFJ SCJJS LFLTG YZBCB LFJFC TWCYR JSLFL SCGHL LYYZY LNGZI CYPBF ZEFLG GTYGT RLFGJ STYVJ SLGPY RTACJ LNCGA WZGLR RZNYT YUCYK CFPCI JLFFK XZKFG ZIKYC KJSZF TGLRG KFMLT WWCYA LHKJE TMLYJ SCJHK WVAZW WLAJT ZYTYJ SLKVT GCKJS ZFTGL RTJTG SCFRJ ZTXCE TYLNS CJJSL PNLFL KBJZT VYZNJ SCJGL MLFCW ZIJSL BLZBW LNSZW CKYAS LRBRG WLIJJ SLATM TWGLF MTALT YILHF KCFPC YRJNZ YZNSC MLHZC FRBZG TJTZY GCJAT JCRLW WLJZJ SLHLG JZIXP VYZNW LRELY ZYLZI JSLGL YTZFG SCRRT FLAJA ZYJCA JNTJS UCXLW TCZFX CFJTY HKJTG KBBZG LTJTG BZGGT HWLJS CJATJ CRLWW LNCGU KGJJS LMLST AWLIZ FBRGJ ZVLLB CYLPL ZYJSL JNZZI JSLXT GJTWW RZYJV YZNNS PJSLP NLFLF LECFR LRCGG BLATC WJSZK ESXCP HLJFT YTJPS CGGZX LJSTY EIZFK GGSLG LYJJS LIZWW ZNTYE XLGGC ELSTR RLYTY CYTXC ELITW LTYTY GJCEF CXCGZ FJZIN TGSPZ KNLFL SLFLJ STYEG ZTCXE KLGGT YEJSC JGSLI LLWGJ SLYLL RJZHL ICTFW PRTGA FLJLG SLSCG CWGZT YAFLC GLRJS LGLAK FTJPW LMLWZ ISLFA ZXXGH KJKYI ZFJKY CJLWP RKLJZ CXTOK BNTJS SZKGL VLLBT YENLN LFLYJ CHWLJ ZGLJK BCGLA KFLAS CYYLW IZFVL PLOAS CYELH LIZFL JFTYT JPWLI JJZUZ TYJSL RPYCX TOJLC XIZFJ KYCJL WPGSL TGEZZ RCJTX BFZMT GTYEC YRGSL SCGJC VLYCW LCRIF ZXXCF JTYCY RKGLR CAZWK XYJFC YGBZG TJTZY ATBSL FJSCJ CWGZL OBWCT YGJSL GJLEC YZEFC BSPJF TYTJP VYZNG JSCJJ SLZBB ZGTJT ZYNTW WITYR TJFLC GZYCH WPGJF CTESJ IZFNC FRJZA FCAVT IJSLP GBZJT JCNZF RZINC FYTYE JFTYT JPGAT BSLFT GJZKE SLFJZ AFCAV JSCYX CFJTY GCYRT SCRJZ SKYJC WTJJW LHTJI ZFJSL AFTHH KJXCP HLPZK NTWWI TYRTJ XZFLL CGTWP VYZNT YECWW JSTGC JWLCG JGSLR TRYJF LGZFJ JZXCF JTYGF LMLFG TYEJF TAVGZ XCPHL NLGSZ KWRAZ YGTRL FZKFG LWMLG WKAVP TRZYJ NCYJJ ZBKGS ZKFWK AVJZZ ICFCY RTRZY JNCYJ JZLOB ZGLJF TYTJP JZXZF LFTGV JSCYY LALGG CFPNS LYPZK FLBWP TGKEE LGJNL IZWWZ NJFTY TJPGC RMTAL CYRKG LCMTE LYLFL ATBSL FCVLP NZFRZ IWLYE JSJSF LLGSZ KWRHL CRLDK CJLHL GJASC FWTL
-
-"""
 
 msg = msg.upper()
 newMsg = ""
@@ -22,7 +19,7 @@ for i in range(len(msg)):
     if ord(msg[i]) > 64 and ord(msg[i]) < 91:
         newMsg += msg[i]
 msg = newMsg
-
+# Sanitising the message
 with open('english_quadgrams.txt') as f:
     lines = f.read().splitlines()
 
@@ -35,6 +32,7 @@ for count in stdQuadOcc.values():
     total += count
 
 def score(quad):
+    # Gives the score for a quadgram (a measure of how likely it is to occur in standard English
     if quad in stdQuadOcc:
         score = math.log10(float(stdQuadOcc[quad]/total))
     else:
@@ -42,8 +40,9 @@ def score(quad):
     return score
 
 def decode(msg, keystr):
-    '''Decodes the message.
-    '''
+    """
+    Decodes the message.
+    """
     keystr = keystr.upper()
     msg = msg.upper()
     dec = ""
@@ -52,6 +51,9 @@ def decode(msg, keystr):
     return(dec)
 
 def fitness(msg, keystr):
+    """
+    Gives the fitness of a given keystr for a message
+    """
     msg = decode(msg, keystr)
     fitness = 0
     for i in range(len(msg) - 3):
@@ -59,6 +61,9 @@ def fitness(msg, keystr):
     return fitness
 
 def randSwitch(keystr):
+    """
+    Switches a random pair of letters in the keystr
+    """
     a = random.randint(0, 25)
     b = random.randint(0, 25)
     while a == b:
@@ -70,6 +75,10 @@ def randSwitch(keystr):
     return keystr
 
 def optimize(msg, keystr):
+    """
+    Will use a greedy random search to find the optimal keystr
+    Returns the optimal keystr along with it's fitness
+    """
     maxfit = fitness(msg, keystr)
     iterations = 0
     while iterations < 1000:
@@ -85,7 +94,8 @@ def optimize(msg, keystr):
 
 
 while True:
-    k = optimize(msg, "YBXONGSWKCPZFMTDHRQUJVELIA")
+    # Loops infinitely in case it doesn't get it first time.
+    k = optimize(msg, "YBXONGSWKCPZFMTDHRQUJVELIA") # Just a random keystr to start with
     print(k)
     print(decode(msg, k[0]).lower())
 
