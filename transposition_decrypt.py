@@ -34,6 +34,9 @@ for count in stdQuadOcc.values():
     total += count
 
 def score(quad):
+    """
+        returns the score for a quadgram
+    """
     if quad in stdQuadOcc:
         score = math.log10(float(stdQuadOcc[quad]/total))
     else:
@@ -41,14 +44,18 @@ def score(quad):
     return score
 
 def columns(msg, l):
+    """
+        Splits the message into columns
+    """
     columns = ["" for i in range(l)]
     for i in range(len(msg)):
         columns[i % l] += msg[i]
     return columns
 
 def decode(msg, keystr):
-    '''Decodes the message.
-    '''
+    """
+        Decodes the message under a substitution cipher
+    """
     dec = ""
     l = len(keystr)
     encCols = columns(msg, l)
@@ -64,6 +71,9 @@ def decode(msg, keystr):
     return(dec)
 
 def fitness(msg, keystr):
+    """
+        Gives the fitness of a message with a keystr
+    """
     msg = decode(msg, keystr)
     fitness = 0
     for i in range(len(msg) - 3):
@@ -71,6 +81,7 @@ def fitness(msg, keystr):
     return fitness
 
 def randSwitch(keystr):
+    # Makes a random switch in the keystr
     l = len(keystr)
     a = random.randint(0, 2 * l)
     if a == l:
@@ -92,6 +103,7 @@ def randSwitch(keystr):
         return keystr
 
 def optimize(msg, keystr):
+    # Attempts to find the optimal keystr for the message
     maxfit = fitness(msg, keystr)
     iterations = 0
     while iterations < 50000:
