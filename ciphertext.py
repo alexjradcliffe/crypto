@@ -5,6 +5,9 @@ import sys
 import random
 import math
 
+# An object-oriented version of analyse.py
+
+
 python3 = True if sys.version_info.major > 2 else False
 if len(sys.argv) >= 2:
     msg = sys.argv[1]
@@ -39,6 +42,9 @@ class ciphertext:
         return len(self.inputMessage)
 
     def occurences(self):
+        """
+        Returns the no. of occurences of each character in the text in a dict
+        """
         occ = {chr(i) : 0 for i in range(65, 91)}
         for i in self.inputMessage:
             if i in occ:
@@ -46,6 +52,9 @@ class ciphertext:
         return occ
 
     def nocc(self, n):
+        """
+        Returns the no. of occurences of each ngram in the text in a dict
+        """
         occ = {}
         for i in range(len(self) + 1 - n):
             if self.inputMessage[i : i + n] in occ:
@@ -55,6 +64,9 @@ class ciphertext:
         return occ
 
     def frequency(self):
+        """
+        Returns the frequencies of each character in the text in a dict
+        """
         N = len(self)
         occ = self.occurences()
         freq = {chr(i) : 0 for i in range(65, 91)}
@@ -63,6 +75,9 @@ class ciphertext:
         return(freq)
 
     def nfreq(self, n):
+        """
+        Returns the frequencies of each ngram in the text in a dict
+        """
         N = len(self) + 1 - n
         occ = self.nocc(n)
         freq = {}
@@ -71,18 +86,27 @@ class ciphertext:
         return(freq)
 
     def sortedfreq(self):
+        """
+        Returns the sorted frequencies of each character in the text in a ordered dict
+        """
         freq = self.frequency()
         sortedf = sorted(freq.items(), key=operator.itemgetter(1), reverse=1)
         return sortedf
 
 
     def sortednfreq(self, n):
+        """
+        Returns the sorted frequencies of each ngram in the text in a ordered dict
+        """
         freq = self.nfreq(n)
         sortedf = sorted(freq.items(), key=operator.itemgetter(1), reverse=1)
         return sortedf
 
 
     def ioc(self):
+        """
+        Returns the index of coincidence of the text
+        """
         N = len(self)
         total = 0
         occ = self.occurences()
@@ -92,6 +116,9 @@ class ciphertext:
 
 
     def analyse(self):
+        """
+        Prints an analysis of the text and outputs it into an html file
+        """
         sf = self.sortedfreq()
         sbf = self.sortednfreq(2)
         stf = self.sortednfreq(3)
@@ -520,6 +547,9 @@ class ciphertext:
               stf[9][0], trifreq[stf[9][0]])
             )
     def fitness(self):
+        """
+        Returns the fitness of the message
+        """
         total = 0
         for count in stdQuadOcc.values():
             total += count
@@ -536,7 +566,8 @@ class ciphertext:
         return fitness
 
     def subDecode(self, keystr):
-        '''Decodes the message.
+        '''
+        Decodes the message with a given substitution keystr
         '''
         keystr = keystr.upper()
         msg = self.inputMessage.upper()
@@ -546,6 +577,9 @@ class ciphertext:
         return(ciphertext(dec))
 
     def optimalKey(self):
+        """
+        Finds the optimal substitution keystr, and returns it along with it's fitness
+        """
         def randSwitch(keystr, msg):
             a = random.randint(0, 25)
             b = random.randint(0, 25)
@@ -585,11 +619,12 @@ class ciphertext:
         return [keystr, maxfit]
     
     def subOptimize(self):
+        """
+        Finds the optimal substitution keystr, and prints the decrypted message
+        """
         k = self.optimalKey()
         print(k)
         print(str(self.subDecode(k[0])).lower())
 
-
-print(ciphertext("""DATJP MZVGG TRVIO OJBZO DIOCZ HDYYG ZJAOC DNTJP RDGGC VQZOJ KVTDF IJRTJ PRDGG WZCPI ODIBH ZVIYD XVIAJ MBDQZ OCZVM MJBVI XZWPO DRDGG IJOAJ MBDQZ TJPMD BIJMV IXZWZ AJMZT JPXVI GZVMI HJMZV WJPOO CZMVO GDIZN AMJHH ZTJPR DGGCV QZOJV NFTJP MXJGG ZVBPZ NDIAM ZIXCV IYWMD ODNCD IOZGG DBZIX ZRCVO OCZTV GMZVY TFIJR KJRZM APGAJ MXZNV MZRJM FDIBO JFZZK OCZMV OGDIZ NMPII DIBVI YRZWJ OCIZZ YOJFI JRRCJ JPMZI ZHDZN VMZWZ AJMZR ZXVIH ZZOTJ PNCJP GYPIY ZMNOV IYOCV ORDOC JPOHZ TJPMD IQZNO DBVOD JINRD GGBVD IGDOO GZIZB JODVO DJINR DOCHZ HVTBV DIZQZ MTOCD IB""").optimalKey())
 
 
