@@ -10,6 +10,7 @@ std::map<std::string, int> stdQuadOcc;
 
 
 void quads(std::map<std::string, int> &stdQuadOcc){
+    // populates stdQuadOcc with all the quadgram frequencies
     std::ifstream file("english_quadgrams.txt");
     std::string str;
     int a;
@@ -23,6 +24,7 @@ void quads(std::map<std::string, int> &stdQuadOcc){
 
 std::string decode(std::string msg, std::string key)
 {
+    // decodes a message msg given a key
     std::string newmsg = "";
     for (int i = 0; i < msg.length() - 1; i += 2){
         char a = msg[i]; // first character in digraph
@@ -72,7 +74,7 @@ std::string decode(std::string msg, std::string key)
 float score(std::string quad){
     if (stdQuadOcc.count("HING") != 1){
         quads(stdQuadOcc);
-    }
+    } // checks that stdQuadOcc has been populated
     if (stdQuadOcc.count(quad) == 1){
         return std::log(stdQuadOcc[quad]);
     } else {
@@ -81,6 +83,7 @@ float score(std::string quad){
 }
 
 float fitness(std::string msg){
+    // returns the fitness of a message
     float fitness = 0;
     for (int i = 0; i < msg.length() - 3; i++){
         fitness += score(msg.substr(i, 4));
@@ -89,6 +92,7 @@ float fitness(std::string msg){
 }
 
 void randSwitch(std::string &key){
+    // switches two random characters in the key
     std::srand(std::time(0));
     int a = std::rand() % 25;
     int b;
@@ -106,12 +110,13 @@ void randSwitch(std::string &key){
 }
 
 void optimize(std::string msg){
-    std::string bestKey = "YBXONGSWKCPZFMTDHRQUJVELIA";
+    // performs a greedy random search on the message for the best key
+    std::string bestKey = "YBXONGSWKCPZFMTDHRQUJVELIA"; // random key used to start the search
     std::string decMsg = decode(msg, bestKey);
     std::string newKey = bestKey;
     float maxFit = fitness(decMsg);
     int iterations = 0;
-    while (iterations < 1000){
+    while (iterations < 1000){ // increase this if it isn't working
         randSwitch(newKey);
 	std::string decMsg = decode(msg, newKey);
 	float newFit = fitness(decMsg);
