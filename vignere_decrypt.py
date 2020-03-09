@@ -45,9 +45,9 @@ l = length of text (int)
     return occ
 
 def occurences(string):
-    '''
-counts the occurences of each letter
-'''
+    """
+    Returns a dict of the no. of occurences of each letter in the string
+    """
     string = string.upper()
     occ = {chr(i) : 0 for i in range(65, 91)}
     for i in string:
@@ -56,6 +56,9 @@ counts the occurences of each letter
     return occ
 
 def frequency(string):
+    """
+    Returns the frequency of each letter in the string
+    """
     N = len(string)
     occ = occurences(string)
     freq = {chr(i) : 0 for i in range(65, 91)}
@@ -64,7 +67,10 @@ def frequency(string):
     return(freq)
         
 def chi_sq(occC, l):
-    occE = freq2occ(stdfreq, l)
+    """
+    Returns the results of a chi-squared test between the decrypted ciphertext and the standard frequencies
+    """
+    occE = freq2occ(stdfreq, l) # Expectation values for occurences of each letter in a text of a particular length
     chi_sq = 0
     for i in range(65, 91):
         chi_sq += ((occC[chr(i)] - occE[chr(i)]) ** 2) / occE[chr(i)]
@@ -72,16 +78,18 @@ def chi_sq(occC, l):
 
 
 def decKey(n):
-    '''Produces the decoding key with a shift of n.
-    '''
+    """
+    Produces the decoding key with a shift of n.
+    """
     key = {}
     for i in range(26):
         key[chr(i + 65)] = chr((i - n) % 26 + 97)
     return key
 
 def decode(msg, n):
-    '''Decodes the message.
-    '''
+    """
+    Decodes the message with a shift of n.
+    "
     msg = msg.upper()
     dec = ""
     key = decKey(n)
@@ -95,9 +103,7 @@ if __name__ == '__main__':
     msg = input("Message: ") if python3 else raw_input("Message: ")
     keylen = input("Key length: ") if python3 else raw_input("Key length: ")
     keylen = int(keylen)
-msg = """
-DYIMX MESTE ZDPNF VVAMJ RNPSG CIGRV VFSIA DICUY OGYFY FMQQI FYFSM LQFXF ZBUOC SOVME CWMDD BNXUE DCIAQ VHFZA GORPK ZCEWF RQJIA NKLQG IYERF XPQAD VPXTO RXTIU AZBFZ HQONB BPSGE PRITE ZYWGL VXDFA GOURA YMBPP SGCIY VZIEN IALVX DFAGO UXTPG OOCMQ GMGRR XFSML MRROS MNDPS GMCGD YIKOW AYKYZ OMECK EZOBU KKCAF KNXFR XJKUO RXUYI TKDIM YLGRZ WUDVB DRKMX MVPPS GEZLD FTXLG NQRQQ ZNPRV WEWQX OPSGC IYVZI EHMJS CPRTV QYLVE PTIOJ MZLAG KCIYL BRIFY TLDRL VIZHI EXVHE ZTRDL WEEIE DRKMT VVMRR XPBLY LLMGM GRVEP OZRCJ SRLVB DYIDD ISOYS GDMND RWYLT YNZWO ZCADF RAFZB BZKUY IYZIM OPIAN ZAUWT VXTPG OMGRV MPPVG SKCAQ IOBZX UDPQY LFXPI TOEXI ZZXSE KUYGB EIIYM IFCPW TLTYG VWMJN BEILG YLEOU XTZCF KEHRC IAMJX AMMCK ZHPTZ RMKPK EWNXR GOZCA DFJYJ KUYFW UYOVP PSGHI ADKSW YWJWF VQLJB EKXTP BEORG TPZLY WCAFZ FYTEX WMQPI MQYLF DYIZW MGEJQ QPBVX KLQAI EUSCF SMOBZ XUDPR WSEED GBXWV UOILK KIXPD RX
-"""
+    
 if __name__ == '__main__':
     msg = msg.upper()
     newMsg = ""
